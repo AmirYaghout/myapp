@@ -20,28 +20,72 @@ class _NotificationMobileState extends State<NotificationMobile> {
       appBar: AppBar(
         title: Text('Notifications Mobile'),
         actions: [
-          IconButton(
-            icon: Icon(_showNotifications ? Icons.close : Icons.notifications),
-            onPressed: () {
-              if (!_showNotifications) {
-                // Show bottom sheet and update state once closed
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) => NotificationPopup(),
-                ).whenComplete(() {
-                  setState(() {
-                    _showNotifications = false;
-                  });
-                });
+          BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+              int notificationCount = 0;
 
-                setState(() {
-                  _showNotifications = true;
-                });
-              } else {
-                setState(() {
-                  _showNotifications = false;
-                });
+              if (state is NotificationsLoaded) {
+                notificationCount = state.notifications
+                    .where((notification) => !notification.seen)
+                    .length; // Only count unseen notifications
               }
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(_showNotifications
+                        ? Icons.close
+                        : Icons.notifications),
+                    onPressed: () {
+                      if (!_showNotifications) {
+                        // Show bottom sheet and update state once closed
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => NotificationPopup(),
+                        ).whenComplete(() {
+                          setState(() {
+                            _showNotifications = false;
+                          });
+                        });
+
+                        setState(() {
+                          _showNotifications = true;
+                        });
+                      } else {
+                        setState(() {
+                          _showNotifications = false;
+                        });
+                      }
+                    },
+                  ),
+                  // Show the badge only if there are notifications
+                  if (notificationCount > 0)
+                    Positioned(
+                      right: 11,
+                      top: 11,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          '$notificationCount',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
         ],

@@ -20,12 +20,53 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
       appBar: AppBar(
         title: Text('Notifications Desktop'),
         actions: [
-          IconButton(
-            icon: Icon(_showNotifications ? Icons.close : Icons.notifications),
-            onPressed: () {
-              setState(() {
-                _showNotifications = !_showNotifications;
-              });
+          BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+              int notificationCount = 0;
+
+              if (state is NotificationsLoaded) {
+                notificationCount = state.notifications
+                    .where((notification) => !notification.seen)
+                    .length; // Count only unseen notifications
+              }
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(_showNotifications ? Icons.close : Icons.notifications),
+                    onPressed: () {
+                      setState(() {
+                        _showNotifications = !_showNotifications;
+                      });
+                    },
+                  ),
+                  if (notificationCount > 0)
+                    Positioned(
+                      right: 11,
+                      top: 11,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          '$notificationCount',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
         ],
@@ -36,7 +77,7 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
           if (_showNotifications)
             Positioned(
               right: 20,
-              top: 60,
+              top: 18, // Adjusted value to reduce the space
               child: NotificationDropdown(), // Dropdown to show notifications
             ),
         ],
@@ -140,18 +181,14 @@ class _NotificationCardState extends State<NotificationCard> {
                       IconButton(
                         icon: Icon(Icons.visibility, color: Colors.green),
                         onPressed: () {
-                          context
-                              .read<NotificationBloc>()
-                              .add(MarkAsSeen(widget.notification.id));
+                          context.read<NotificationBloc>().add(MarkAsSeen(widget.notification.id));
                         },
                         tooltip: 'Mark as Seen',
                       ),
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          context
-                              .read<NotificationBloc>()
-                              .add(DeleteNotification(widget.notification.id));
+                          context.read<NotificationBloc>().add(DeleteNotification(widget.notification.id));
                         },
                         tooltip: 'Delete',
                       ),

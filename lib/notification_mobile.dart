@@ -62,25 +62,27 @@ class _NotificationMobileState extends State<NotificationMobile> {
                   // Show the badge only if there are notifications
                   if (notificationCount > 0)
                     Positioned(
-                      right: 11,
-                      top: 11,
+                      right: 5, // Position the badge closer to the top-right corner
+                      top: 5,  // Top-right alignment for mobile
                       child: Container(
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
+                          shape: BoxShape.circle, // Circular badge
                         ),
                         constraints: BoxConstraints(
                           minWidth: 16,
                           minHeight: 16,
                         ),
-                        child: Text(
-                          '$notificationCount',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                        child: Center(
+                          child: Text(
+                            '$notificationCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10, // Font size adjusted for circular badge
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

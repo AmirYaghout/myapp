@@ -43,25 +43,27 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
                   ),
                   if (notificationCount > 0)
                     Positioned(
-                      right: 11,
-                      top: 11,
+                      right: 5, // Position the badge to the top-right of the button
+                      top: 5, // Closer to the top-right edge
                       child: Container(
-                        padding: EdgeInsets.all(2),
+                        padding: EdgeInsets.all(1),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
+                          shape: BoxShape.circle, // Ensures the badge is circular
                         ),
                         constraints: BoxConstraints(
                           minWidth: 16,
                           minHeight: 16,
                         ),
-                        child: Text(
-                          '$notificationCount',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                        child: Center(
+                          child: Text(
+                            '$notificationCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10, // Font size adjusted for the circle
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -77,7 +79,7 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
           if (_showNotifications)
             Positioned(
               right: 20,
-              top: 18, // Adjusted value to reduce the space
+              top: 18, // Adjusted value to reduce the space between dropdown and button
               child: NotificationDropdown(), // Dropdown to show notifications
             ),
         ],

@@ -27,7 +27,7 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
               if (state is NotificationsLoaded) {
                 notificationCount = state.notifications
                     .where((notification) => !notification.seen)
-                    .length; // Count only unseen notifications
+                    .length; // Only count unseen notifications
               }
 
               return Stack(
@@ -41,15 +41,16 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
                       });
                     },
                   ),
+                  // Show the badge only if there are notifications
                   if (notificationCount > 0)
                     Positioned(
-                      right: 5, // Position the badge to the top-right of the button
-                      top: 5, // Closer to the top-right edge
+                      right: 5, // Adjust position to top-right corner
+                      top: 5,
                       child: Container(
-                        padding: EdgeInsets.all(1),
+                        padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          shape: BoxShape.circle, // Ensures the badge is circular
+                          shape: BoxShape.circle, // Circular badge
                         ),
                         constraints: BoxConstraints(
                           minWidth: 16,
@@ -57,10 +58,10 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
                         ),
                         child: Center(
                           child: Text(
-                            '$notificationCount',
+                            notificationCount > 99 ? '99+' : '$notificationCount', // Display '99+' if count > 99
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10, // Font size adjusted for the circle
+                              fontSize: 10, // Small font to fit inside the badge
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -79,7 +80,7 @@ class _NotificationDesktopState extends State<NotificationDesktop> {
           if (_showNotifications)
             Positioned(
               right: 20,
-              top: 18, // Adjusted value to reduce the space between dropdown and button
+              top: 18, // Adjusted to reduce space
               child: NotificationDropdown(), // Dropdown to show notifications
             ),
         ],

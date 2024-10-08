@@ -62,8 +62,8 @@ class _NotificationMobileState extends State<NotificationMobile> {
                   // Show the badge only if there are notifications
                   if (notificationCount > 0)
                     Positioned(
-                      right: 5, // Position the badge closer to the top-right corner
-                      top: 5,  // Top-right alignment for mobile
+                      right: 5, // Adjust position to top-right corner
+                      top: 5,
                       child: Container(
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -76,10 +76,10 @@ class _NotificationMobileState extends State<NotificationMobile> {
                         ),
                         child: Center(
                           child: Text(
-                            '$notificationCount',
+                            notificationCount > 99 ? '99+' : '$notificationCount', // Show '99+' if over 99 notifications
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10, // Font size adjusted for circular badge
+                              fontSize: 10, // Smaller font to fit in the badge
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -126,7 +126,7 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(notification.id.toString()), // Each notification needs a unique key
-      direction: DismissDirection.endToStart, // Allow swipe only to the left
+      direction: DismissDirection.endToStart, // Swipe to the left only
       background: Container(), // Empty background, no red or delete icon
       confirmDismiss: (direction) async {
         // Open a modal bottom sheet with buttons when swiped
